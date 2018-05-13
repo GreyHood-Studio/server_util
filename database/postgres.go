@@ -5,16 +5,16 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var DBConn map[string]*sql.DB
+var Conns map[string]*sql.DB
 
 func ConnectPG(use string, psql string) {
 	var err error
-	DBConn[use], err = sql.Open("postgres", psql)
+	Conns[use], err = sql.Open("postgres", psql)
 	if err != nil {
 		panic(err)
 	}
 
-	err = DBConn[use].Ping()
+	err = Conns[use].Ping()
 	if err != nil {
 		panic(err)
 	}
@@ -22,6 +22,6 @@ func ConnectPG(use string, psql string) {
 }
 
 func ClosePG(use string) {
-	DBConn[use].Close()
-	delete(DBConn, use)
+	Conns[use].Close()
+	delete(Conns, use)
 }
