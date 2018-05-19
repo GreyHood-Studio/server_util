@@ -1,27 +1,20 @@
 package database
 
+
 import (
-	"database/sql"
 	_ "github.com/lib/pq"
+	"database/sql"
 )
 
-var Conns map[string]*sql.DB
-
-func ConnectPG(use string, psql string) {
-	var err error
-	Conns[use], err = sql.Open("postgres", psql)
+func ConnectPG(use string, psql string) *sql.DB{
+	conn, err := sql.Open("postgres", psql)
 	if err != nil {
 		panic(err)
 	}
 
-	err = Conns[use].Ping()
+	err = conn.Ping()
 	if err != nil {
 		panic(err)
 	}
-
-}
-
-func ClosePG(use string) {
-	Conns[use].Close()
-	delete(Conns, use)
+	return conn
 }
